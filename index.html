@@ -338,7 +338,9 @@ if (resultCount) {
                 loadedData = await response.json();
                 render(loadedData);
                 setLoadedStatus(loadedData);
-                searchInput.disabled = false;
+                if (searchInput) {
+  searchInput.disabled = false;
+}
             } catch (error) {
                 setErrorStatus();
                 console.error("Unable to load Streetfight tiers:", error);
