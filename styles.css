@@ -249,8 +249,7 @@ input {
 }
 
 .eyebrow,
-.section-kicker,
-.column-label {
+.section-kicker {
     margin: 0;
     color: var(--muted);
     font-size: 0.7rem;
@@ -685,7 +684,7 @@ h1 em {
 
 .player-row {
     display: grid;
-    grid-template-columns: 24px 38px minmax(0, 1fr) auto;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
     align-items: center;
     gap: 10px;
     min-width: 0;
@@ -704,20 +703,6 @@ h1 em {
     border-color: rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.052);
     transform: translateX(2px);
-}
-
-.placement {
-    color: #656a76;
-    font-family: "Space Grotesk", Inter, sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-align: center;
-}
-
-.player-row:nth-child(1) .placement,
-.player-row:nth-child(2) .placement,
-.player-row:nth-child(3) .placement {
-    color: var(--column-accent);
 }
 
 .player-avatar {
@@ -1115,7 +1100,7 @@ h1 em {
     }
 
     .player-row {
-        grid-template-columns: 20px 34px minmax(0, 1fr) auto;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
         gap: 8px;
         padding: 8px;
     }
