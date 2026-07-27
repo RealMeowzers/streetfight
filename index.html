@@ -290,19 +290,38 @@ if (resultCount) {
   }
 }
 
-        function setErrorStatus(message) {
-  const status =
-    document.querySelector("#updated") ||
-    document.querySelector("#status-text") ||
-    document.querySelector(".updated");
-
-  if (!status) {
-    console.error(message);
-    return;
+        function setErrorStatus() {
+  if (tierGrid) {
+    tierGrid.setAttribute("aria-busy", "false");
+    tierGrid.replaceChildren(
+      createEmptyRow(
+        "Could not load rankings",
+        "page-empty-state error-state"
+      )
+    );
   }
 
-  status.textContent = message;
-  status.classList.add("error");
+  if (updated) {
+    updated.innerHTML =
+      `<span class="error-icon" aria-hidden="true">!</span> Could not load the player list. Please refresh.`;
+  }
+
+  if (statusLabel) {
+    statusLabel.innerHTML =
+      `<span class="status-pulse offline" aria-hidden="true"></span>Unavailable`;
+  }
+
+  if (playerCount) {
+    playerCount.textContent = "—";
+  }
+
+  if (categoryCount) {
+    categoryCount.textContent = "—";
+  }
+
+  if (resultCount) {
+    resultCount.textContent = "";
+  }
 }
 
         async function loadPlayers() {
