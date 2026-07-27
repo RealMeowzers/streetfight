@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#08090c" />
+    <meta name="description" content="View the latest tested Streetfight player tiers." />
+    <title>Streetfight Tiers</title>
+    <link rel="preconnect" href="https://render.crafty.gg" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="background-effects" aria-hidden="true">
+        <div class="glow glow-red"></div>
+        <div class="glow glow-gold"></div>
+        <div class="noise"></div>
+    </div>
+
+    <main class="page-shell">
+        <header class="hero">
+            <nav class="topbar" aria-label="Primary navigation">
+                <a class="brand" href="https://streetfight.cc" aria-label="Streetfight home">
+                    <span class="brand-mark" aria-hidden="true">
+
+                    </span>
+                    <span>
+                        <strong>STREETFIGHT</strong>
+                        <small>Competitive Network</small>
+                    </span>
+                </a>
+                <a class="discord-button" href="https://discord.gg/v4VtC3FjP3" target="_blank"
+                    rel="noopener noreferrer" aria-label="Join our Discord">
+                    <img src="discord.png" alt="Discord">
+                </a>
+                <a class="server-link">
+                    <span class="live-dot" aria-hidden="true"></span>
+                    streetfight.cc
+                </a>
+            </nav>
+
+            <div class="hero-content">
+                <div class="hero-copy">
+                    <p class="eyebrow"><span></span> Official rankings</p>
+                    <h1>Streetfight <em>Tiers</em></h1>
+                    <p class="hero-description">
+                        Browse every tested player, compare placements, and find the strongest
+                        fighters in each category.
+                    </p>
+                </div>
+
+                <div class="stats" aria-label="Tier list statistics">
+                    <article class="stat-card">
+                        <span class="stat-label">Tested players</span>
+                        <strong id="player-count" class="stat-value">—</strong>
+                    </article>
+                    <article class="stat-card status-card">
+                        <span class="stat-label">Status</span>
+                        <strong id="status-label" class="stat-value status-value">
+                            <span class="status-pulse" aria-hidden="true"></span>
+                            Loading
+                        </strong>
+                    </article>
+                </div>
+            </div>
+        </header>
+
+        <section class="content-panel" aria-labelledby="rankings-title">
+            <div class="toolbar">
+                <div>
+                    <p class="section-kicker">Player database</p>
+                    <h2 id="rankings-title">Current rankings</h2>
+                </div>
+
+                <label class="search-box" for="player-search">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+                    </svg>
+                    <input id="player-search" type="search" placeholder="Search a player..." autocomplete="off"
+                        spellcheck="false" disabled />
+                    <kbd>/</kbd>
+                </label>
+            </div>
+
+            <div class="update-row">
+                <p id="updated" class="updated" role="status">
+                    <span class="spinner" aria-hidden="true"></span>
+                    Loading tested players...
+                </p>
+                <p id="result-count" class="result-count" aria-live="polite"></p>
+            </div>
+
+            <section id="tier-grid" class="tier-grid" aria-live="polite" aria-busy="true">
+                <article class="tier-column skeleton-column" aria-hidden="true">
+                    <div class="skeleton skeleton-heading"></div>
+                    <div class="skeleton-list">
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                    </div>
+                </article>
+                <article class="tier-column skeleton-column" aria-hidden="true">
+                    <div class="skeleton skeleton-heading"></div>
+                    <div class="skeleton-list">
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                    </div>
+                </article>
+                <article class="tier-column skeleton-column" aria-hidden="true">
+                    <div class="skeleton skeleton-heading"></div>
+                    <div class="skeleton-list">
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                        <div class="skeleton skeleton-row"></div>
+                    </div>
+                </article>
+            </section>
+        </section>
+
+        <footer class="site-footer">
+            <p>Streetfight Tiers</p>
+            <span></span>
+            <p>Rankings update automatically</p>
+        </footer>
+    </main>
+
+    <template id="tier-column-template">
+        <article class="tier-column">
+            <header class="column-header">
+                <div class="column-title-wrap">
+                    <span class="column-icon" aria-hidden="true"></span>
+                    <div>
+                        <p class="column-label">Category</p>
+                        <h3></h3>
+                    </div>
+                </div>
+                <span class="column-count"></span>
+            </header>
+            <ol class="player-list"></ol>
+        </article>
+    </template>
+
+    <template id="player-template">
+        <li class="player-row">
+            <span class="placement" aria-hidden="true"></span>
+            <img class="player-avatar" width="38" height="38" alt="" loading="lazy" />
+            <span class="player-info">
+                <strong class="player-name"></strong>
+                <small>Tested player</small>
+            </span>
+            <span class="tier-badge"></span>
+        </li>
+    </template>
+
+    <script>
+        const tierGrid = document.querySelector("#tier-grid");
+        const updated = document.querySelector("#updated");
+        const statusLabel = document.querySelector("#status-label");
+        const playerCount = document.querySelector("#player-count");
+        const categoryCount = document.querySelector("#category-count");
+        const resultCount = document.querySelector("#result-count");
+        const searchInput = document.querySelector("#player-search");
+        const columnTemplate = document.querySelector("#tier-column-template");
+        const playerTemplate = document.querySelector("#player-template");
+
+        const columnAccents = ["#ef3f4d", "#ff7849", "#ffc857", "#61d095", "#7aa2ff", "#b98cff"];
+        let loadedData = { columns: {} };
+
+        function safeTierClass(tier = "") {
+            return `tier-${String(tier).toLowerCase().replace(/[^a-z0-9-]/g, "")}`;
+        }
+
+        function createPlayerRow(player, placement) {
+            const item = playerTemplate.content.firstElementChild.cloneNode(true);
+            const username = String(player.username || "Unknown player");
+            const tier = String(player.tier || "N/A");
+            const avatar = item.querySelector(".player-avatar");
+            const badge = item.querySelector(".tier-badge");
+
+            item.dataset.username = username.toLowerCase();
+            item.querySelector(".placement").textContent = String(placement).padStart(2, "0");
+            item.querySelector(".player-name").textContent = username;
+
+            avatar.src = `https://render.crafty.gg/2d/head/${encodeURIComponent(username)}?scale=4`;
+            avatar.alt = `${username}'s Minecraft head`;
+            avatar.addEventListener("error", () => {
+                avatar.classList.add("avatar-fallback");
+                avatar.removeAttribute("src");
+                avatar.alt = "";
+            });
+
+            badge.className = `tier-badge ${safeTierClass(tier)}`;
+            badge.textContent = tier;
+            badge.setAttribute("aria-label", `Tier ${tier}`);
+
+            return item;
+        }
+
+        function createEmptyRow(message, className = "empty-row") {
+            const item = document.createElement("li");
+            item.className = className;
+            item.innerHTML = `
+          <span class="empty-icon" aria-hidden="true">✦</span>
+          <strong>${message}</strong>
+          <small>Players will appear here after testing.</small>
+        `;
+            return item;
+        }
+
+        function render(data, searchTerm = "") {
+            const fragment = document.createDocumentFragment();
+            const columns = Object.entries(data.columns || {});
+            const normalizedSearch = searchTerm.trim().toLowerCase();
+            let visiblePlayers = 0;
+            let totalPlayers = 0;
+
+            columns.forEach(([columnName, players], index) => {
+                const allPlayers = Array.isArray(players) ? players : [];
+                const filteredPlayers = normalizedSearch
+                    ? allPlayers.filter((player) =>
+                        String(player.username || "").toLowerCase().includes(normalizedSearch),
+                    )
+                    : allPlayers;
+
+                totalPlayers += allPlayers.length;
+                visiblePlayers += filteredPlayers.length;
+
+                const node = columnTemplate.content.firstElementChild.cloneNode(true);
+                node.style.setProperty("--column-accent", columnAccents[index % columnAccents.length]);
+                node.style.setProperty("--entrance-delay", `${Math.min(index * 65, 390)}ms`);
+                node.querySelector("h3").textContent = columnName;
+                node.querySelector(".column-count").textContent = `${filteredPlayers.length} player${filteredPlayers.length === 1 ? "" : "s"}`;
+                const list = node.querySelector(".player-list");
+
+                if (!filteredPlayers.length) {
+                    const message = normalizedSearch ? "No matching players" : "No players yet";
+                    list.append(createEmptyRow(message));
+                } else {
+                    filteredPlayers.forEach((player, playerIndex) => {
+                        list.append(createPlayerRow(player, playerIndex + 1));
+                    });
+                }
+
+                fragment.append(node);
+            });
+
+            tierGrid.replaceChildren(fragment);
+            tierGrid.setAttribute("aria-busy", "false");
+            playerCount.textContent = totalPlayers.toLocaleString();
+            categoryCount.textContent = columns.length.toLocaleString();
+
+            resultCount.textContent = normalizedSearch
+                ? `${visiblePlayers.toLocaleString()} match${visiblePlayers === 1 ? "" : "es"}`
+                : `${totalPlayers.toLocaleString()} ranked player${totalPlayers === 1 ? "" : "s"}`;
+
+            if (!columns.length) {
+                tierGrid.append(createEmptyRow("No ranking categories found", "page-empty-state"));
+            }
+        }
+
+        function setLoadedStatus(data) {
+            const generatedAt = data.generatedAt ? new Date(data.generatedAt) : null;
+            const hasValidDate = generatedAt && !Number.isNaN(generatedAt.getTime());
+
+            updated.innerHTML = hasValidDate
+                ? `<span class="success-check" aria-hidden="true">✓</span> Last updated ${generatedAt.toLocaleString()}`
+                : `<span class="success-check" aria-hidden="true">✓</span> Player list loaded`;
+
+            statusLabel.innerHTML = `<span class="status-pulse online" aria-hidden="true"></span>Online`;
+        }
+
+        function setErrorStatus() {
+            tierGrid.setAttribute("aria-busy", "false");
+            tierGrid.replaceChildren(createEmptyRow("Could not load rankings", "page-empty-state error-state"));
+            updated.innerHTML = `<span class="error-icon" aria-hidden="true">!</span> Could not load the player list. Please refresh.`;
+            statusLabel.innerHTML = `<span class="status-pulse offline" aria-hidden="true"></span>Unavailable`;
+            playerCount.textContent = "—";
+            categoryCount.textContent = "—";
+            resultCount.textContent = "";
+        }
+
+        async function loadPlayers() {
+            try {
+                const response = await fetch(
+                    `https://streetfight.cc/players.json?ts=${Date.now()}`,
+                    { cache: "no-store" },
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                loadedData = await response.json();
+                render(loadedData);
+                setLoadedStatus(loadedData);
+                searchInput.disabled = false;
+            } catch (error) {
+                setErrorStatus();
+                console.error("Unable to load Streetfight tiers:", error);
+            }
+        }
+
+        searchInput.addEventListener("input", (event) => {
+            render(loadedData, event.target.value);
+        });
+
+        document.addEventListener("keydown", (event) => {
+            const target = event.target;
+            const isTyping = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+
+            if (event.key === "/" && !isTyping && !searchInput.disabled) {
+                event.preventDefault();
+                searchInput.focus();
+            }
+
+            if (event.key === "Escape" && document.activeElement === searchInput) {
+                searchInput.value = "";
+                render(loadedData);
+                searchInput.blur();
+            }
+        });
+
+        loadPlayers();
+    </script>
+</body>
+
+</html>
