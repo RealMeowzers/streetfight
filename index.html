@@ -271,15 +271,24 @@ if (resultCount) {
         }
 
         function setLoadedStatus(data) {
-            const generatedAt = data.generatedAt ? new Date(data.generatedAt) : null;
-            const hasValidDate = generatedAt && !Number.isNaN(generatedAt.getTime());
+  const generatedAt = data.generatedAt
+    ? new Date(data.generatedAt)
+    : null;
 
-            updated.innerHTML = hasValidDate
-                ? `<span class="success-check" aria-hidden="true">✓</span> Last updated ${generatedAt.toLocaleString()}`
-                : `<span class="success-check" aria-hidden="true">✓</span> Player list loaded`;
+  const hasValidDate =
+    generatedAt && !Number.isNaN(generatedAt.getTime());
 
-            statusLabel.innerHTML = `<span class="status-pulse online" aria-hidden="true"></span>Online`;
-        }
+  if (updated) {
+    updated.innerHTML = hasValidDate
+      ? `<span class="success-check" aria-hidden="true">✓</span> Last updated ${generatedAt.toLocaleString()}`
+      : `<span class="success-check" aria-hidden="true">✓</span> Player list loaded`;
+  }
+
+  if (statusLabel) {
+    statusLabel.innerHTML =
+      `<span class="status-pulse online" aria-hidden="true"></span>Online`;
+  }
+}
 
         function setErrorStatus(message) {
   const status =
