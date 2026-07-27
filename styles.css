@@ -1180,3 +1180,53 @@ h1 em {
 .topbar {
   padding: 14px 22px;
 }
+/* Fix cramped player rows */
+.player-row {
+  grid-template-columns: 38px minmax(0, 1fr) 48px;
+  gap: 9px;
+  padding: 9px;
+}
+
+.player-info {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.player-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-info small {
+  display: none;
+}
+
+.tier-badge {
+  width: 48px;
+  min-width: 48px;
+  padding: 7px 4px;
+  white-space: nowrap;
+}
+
+/* Prevent tier columns from becoming too narrow */
+.tier-grid {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(280px, 100%), 1fr)
+  );
+}
+
+@media (max-width: 430px) {
+  .player-row {
+    grid-template-columns: 34px minmax(0, 1fr) 44px;
+    gap: 8px;
+  }
+
+  .tier-badge {
+    width: 44px;
+    min-width: 44px;
+    padding: 6px 3px;
+  }
+}
