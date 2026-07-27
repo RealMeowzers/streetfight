@@ -135,7 +135,6 @@
                 <div class="column-title-wrap">
                     <span class="column-icon" aria-hidden="true"></span>
                     <div>
-                        <p class="column-label">Category</p>
                         <h3></h3>
                     </div>
                 </div>
@@ -147,7 +146,6 @@
 
     <template id="player-template">
         <li class="player-row">
-            <span class="placement" aria-hidden="true"></span>
             <img class="player-avatar" width="38" height="38" alt="" loading="lazy" />
             <span class="player-info">
                 <strong class="player-name"></strong>
@@ -175,7 +173,7 @@
             return `tier-${String(tier).toLowerCase().replace(/[^a-z0-9-]/g, "")}`;
         }
 
-        function createPlayerRow(player, placement) {
+        function createPlayerRow(player) {
             const item = playerTemplate.content.firstElementChild.cloneNode(true);
             const username = String(player.username || "Unknown player");
             const tier = String(player.tier || "N/A");
@@ -183,7 +181,6 @@
             const badge = item.querySelector(".tier-badge");
 
             item.dataset.username = username.toLowerCase();
-            item.querySelector(".placement").textContent = String(placement).padStart(2, "0");
             item.querySelector(".player-name").textContent = username;
 
             avatar.src = `https://render.crafty.gg/2d/head/${encodeURIComponent(username)}?scale=4`;
@@ -241,8 +238,8 @@
                     const message = normalizedSearch ? "No matching players" : "No players yet";
                     list.append(createEmptyRow(message));
                 } else {
-                    filteredPlayers.forEach((player, playerIndex) => {
-                        list.append(createPlayerRow(player, playerIndex + 1));
+                    filteredPlayers.forEach((player) => {
+                        list.append(createPlayerRow(player));
                     });
                 }
 
