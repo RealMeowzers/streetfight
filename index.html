@@ -251,12 +251,19 @@
 
             tierGrid.replaceChildren(fragment);
             tierGrid.setAttribute("aria-busy", "false");
-            playerCount.textContent = totalPlayers.toLocaleString();
-            categoryCount.textContent = columns.length.toLocaleString();
+           if (playerCount) {
+  playerCount.textContent = totalPlayers.toLocaleString();
+}
 
-            resultCount.textContent = normalizedSearch
-                ? `${visiblePlayers.toLocaleString()} match${visiblePlayers === 1 ? "" : "es"}`
-                : `${totalPlayers.toLocaleString()} ranked player${totalPlayers === 1 ? "" : "s"}`;
+if (categoryCount) {
+  categoryCount.textContent = columns.length.toLocaleString();
+}
+
+if (resultCount) {
+  resultCount.textContent = normalizedSearch
+    ? `${visiblePlayers.toLocaleString()} match${visiblePlayers === 1 ? "" : "es"}`
+    : `${totalPlayers.toLocaleString()} ranked player${totalPlayers === 1 ? "" : "s"}`;
+}
 
             if (!columns.length) {
                 tierGrid.append(createEmptyRow("No ranking categories found", "page-empty-state"));
